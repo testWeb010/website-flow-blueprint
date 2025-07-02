@@ -1,6 +1,7 @@
+
 import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
+import OptimizedHero from "@/components/OptimizedHero";
 import HumanoidSection from "@/components/HumanoidSection";
 import SpecsSection from "@/components/SpecsSection";
 import DetailsSection from "@/components/DetailsSection";
@@ -12,7 +13,7 @@ import MadeByHumans from "@/components/MadeByHumans";
 import Footer from "@/components/Footer";
 
 const Index = () => {
-  // Initialize intersection observer to detect when elements enter viewport
+  // Simplified intersection observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -29,39 +30,38 @@ const Index = () => {
     const elements = document.querySelectorAll(".animate-on-scroll");
     elements.forEach((el) => observer.observe(el));
     
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-    };
+    return () => observer.disconnect();
   }, []);
 
+  // Simplified smooth scrolling
   useEffect(() => {
-    // This helps ensure smooth scrolling for the anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    const handleAnchorClick = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.href?.includes('#')) {
         e.preventDefault();
-        
-        const targetId = this.getAttribute('href')?.substring(1);
-        if (!targetId) return;
-        
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) return;
-        
-        // Increased offset to account for mobile nav
-        const offset = window.innerWidth < 768 ? 100 : 80;
-        
-        window.scrollTo({
-          top: targetElement.offsetTop - offset,
-          behavior: 'smooth'
-        });
-      });
-    });
+        const targetId = target.getAttribute('href')?.substring(1);
+        if (targetId) {
+          const element = document.getElementById(targetId);
+          if (element) {
+            const offset = window.innerWidth < 768 ? 100 : 80;
+            window.scrollTo({
+              top: element.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
   }, []);
 
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-      <main className="space-y-4 sm:space-y-8"> {/* Reduced space on mobile */}
-        <Hero />
+      <main className="space-y-4 sm:space-y-8">
+        <OptimizedHero />
         <HumanoidSection />
         <SpecsSection />
         <DetailsSection />
