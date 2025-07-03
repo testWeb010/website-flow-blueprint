@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -8,6 +9,7 @@ import { connectToDatabase } from "./db/conn.mjs";
 import path from "path";
 import http from 'http';
 import { websocketService } from './services/websocketService.mjs';
+import documentationRouter from './routes/documentation.mjs';
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -62,6 +64,7 @@ const logAdminActivity = (req, res, next) => {
   
   next();
 };
+
 // Apply activity logging middleware
 app.use(logAdminActivity);
 
@@ -70,13 +73,15 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// Documentation API routes
+app.use('/api/documentation', documentationRouter);
+
 // app.use("/api/auth", authRouter);
 // app.use("/api/report", requireAuth, reportRouter);
 
 // Apply both requireAuth and requireAdmin middleware for admin routes
 // app.use("/api/admin", requireAuth, requireAdmin, adminRouter);
 // app.use("/api/user", requireAuth, userRouter);
-
 
 // Connect to MongoDB and start server
 connectToDatabase()
@@ -93,4 +98,3 @@ connectToDatabase()
   .catch((err) => {
     console.error("Error connecting to MongoDB", err);
   });
-
