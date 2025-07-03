@@ -23,14 +23,14 @@ const BackgroundOverlay = () => (
 
 const Hero = () => {
   // Toggle to re-enable the legacy particle system if ever needed
-  const ENABLE_OLD_ANIMATION = false;
+  const ENABLE_OLD_ANIMATION = true; // Changed to true to enable particles
   const heroRef = useRef<HTMLDivElement | null>(null);
   const [lottieData, setLottieData] = useState<any>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isLowPower, setIsLowPower] = useState(false);
   const frameRef = useRef<number | null>(null);
   const lastFrameTime = useRef<number>(0);
-  const targetFPS = useRef(30); // Target 30 FPS for better performance
+  const targetFPS = useRef(30);
   const frameInterval = useRef(1000 / targetFPS.current);
   const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
   const isMouseMoving = useRef<boolean>(false);
@@ -544,6 +544,7 @@ const Hero = () => {
       >
         <div className="animation-container">
           <div className="animation-inner">
+            <canvas id="canvas-webgl" className="p-canvas-webgl"></canvas>
             <ShaderBackground className="shader-bg-canvas" />
             <div className="overlay"></div>
           </div>
